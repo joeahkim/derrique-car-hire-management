@@ -3,45 +3,42 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
-    public function create(): View
+    // Show the login form
+    public function create()
     {
-        return view('auth.login');
+        return view('auth.admin.login');  // This is your login page
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
+    // Handle login request
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $credentials = $request->only('email', 'password');
 
-        $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+            // Check if the authenticated user is an admin
+            if ($user->role === 'admin' || $user->role === 'super-admin') {
+                return redirect()->route('admin.dashboard');  // Replace with your admin dashboard route
+            }
+
+            // If user is not an admin, log them out
+            Auth::logout();
+            return back()->withErrors(['error' => 'Unauthorized access.']);
+        }
+
+        return back()->withErrors(['error' => 'Invalid credentials.']);
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
+    // Handle logout
+    public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return redirect('/');
+        Auth::logout();
+        return redirect()->route('admin.login');
     }
 }

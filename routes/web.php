@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\auth\AuthenticatedSessionController;
+use App\Http\Controllers\ClientController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,6 +40,8 @@ Route::post('/admin/logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::middleware('auth')->get('/admin/dashboard', function () {
     return view('auth.admin.dashboard');  // Replace with your actual dashboard view
 })->name('admin.dashboard');
+
+Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 
 
 require __DIR__ . '/auth.php';

@@ -11,7 +11,7 @@ class AuthenticatedSessionController extends Controller
     // Show the login form
     public function create()
     {
-        return view('auth.admin.login');  // This is your login page
+        return view('auth.admin.login'); // Adjust the view path if necessary
     }
 
     // Handle login request
@@ -22,12 +22,14 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            // Check if the authenticated user is an admin
-            if ($user->role === 'admin' || $user->role === 'super-admin') {
-                return redirect()->route('admin.dashboard');  // Replace with your admin dashboard route
+            // Check the authenticated user's role
+            if ($user->role === 'super-admin') {
+                return redirect()->route('super-admin.dashboard'); // Redirect super-admin
+            } elseif ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard'); // Redirect admin
             }
 
-            // If user is not an admin, log them out
+            // If user role is neither admin nor super-admin, log them out
             Auth::logout();
             return back()->withErrors(['error' => 'Unauthorized access.']);
         }

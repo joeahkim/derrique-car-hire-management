@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\SuperAdminController;
+use App\Http\Middleware\SuperAdminMiddleware;
 
 
 Route::get('/', function () {
@@ -43,5 +45,18 @@ Route::middleware('auth')->get('/admin/dashboard', function () {
 
 Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 
+// Route::get('/super-admin/login', [SuperAdminController::class, 'showLoginForm'])->name('super-admin.login-form');
+// Route::post('/super-admin/login', [SuperAdminController::class, 'login'])->name('super-admin.login');
+// Route::middleware(SuperAdminMiddleware::class)->group(function () {
+//     Route::get('/super-admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('super-admin.dashboard');
+// });
+
+
+Route::get('/super-admin/login', [AuthenticatedSessionController::class, 'create'])->name('super-admin.login');
+Route::post('/super-admin/login', [AuthenticatedSessionController::class, 'store'])->name('super-admin.login.submit');
+Route::post('/super-admin/logout', [AuthenticatedSessionController::class, 'destroy'])->name('super-admin.logout');
+Route::middleware('auth')->get('/super-admin/dashboard', function () {
+    return view('auth.super-admin.dashboard');  // Replace with your actual dashboard view
+})->name('super-admin.dashboard');
 
 require __DIR__ . '/auth.php';

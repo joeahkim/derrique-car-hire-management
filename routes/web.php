@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\SuperAdminController;
-use App\Http\Middleware\SuperAdminMiddleware;
+use App\Http\Controllers\SuperAdmin\CarController;
+
 
 
 Route::get('/', function () {
@@ -58,5 +58,15 @@ Route::post('/super-admin/logout', [AuthenticatedSessionController::class, 'dest
 Route::middleware('auth')->get('/super-admin/dashboard', function () {
     return view('auth.super-admin.dashboard');  // Replace with your actual dashboard view
 })->name('super-admin.dashboard');
+
+// Car management for super admin
+Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
+    // Route to show the form for creating a car
+    Route::get('/cars/create', [CarController::class, 'create'])->name('cars.create');
+
+    // Route to handle form submission
+    Route::post('/cars', [CarController::class, 'store'])->name('cars.store');
+});
+
 
 require __DIR__ . '/auth.php';

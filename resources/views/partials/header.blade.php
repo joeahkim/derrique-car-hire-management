@@ -2,7 +2,7 @@
     <div class="d-flex align-items-center justify-content-between">
         <a href="{{ url('/admin') }}" class="logo d-flex align-items-center">
             <img src="{{ asset('assets/img/favicon.jpg') }}" alt="">
-            <span class="d-none d-lg-block">RB Advisors</span>
+            <span class="d-none d-lg-block">Derrique H&T</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
@@ -11,7 +11,7 @@
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                     <img src="{{ asset('assets/img/ceo.jpg') }}" alt="Profile" class="rounded-circle">
-                    <span class="d-none d-md-block dropdown-toggle ps-2">Regina Gakuru</span>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">Admin</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
@@ -24,7 +24,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="{{ url('/logout') }}">
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">
                             <i class="bi bi-box-arrow-right"></i> <span>Sign Out</span>
                         </a>
                     </li>

@@ -6,7 +6,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/clients') }}">
+            <a class="nav-link" href="{{ route('super-admin.cars.create') }}">
                 <i class="bi bi-card-list"></i> <span>Add a Car</span>
             </a>
         </li>

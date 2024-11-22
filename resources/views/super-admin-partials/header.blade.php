@@ -15,7 +15,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
-                        <h6>Regina Gakuru</h6>
+                        <h6>Admin</h6>
                         <span>CEO</span>
                     </li>
                     <li>
@@ -24,7 +24,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="{{ url('/logout') }}">
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">
                             <i class="bi bi-box-arrow-right"></i> <span>Sign Out</span>
                         </a>
                     </li>

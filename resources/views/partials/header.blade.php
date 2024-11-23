@@ -11,22 +11,25 @@
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                     <img src="{{ asset('assets/img/ceo.jpg') }}" alt="Profile" class="rounded-circle">
-                    <span class="d-none d-md-block dropdown-toggle ps-2">Admin</span>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">{{ auth()->user()->name }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
-                        <h6>Regina Gakuru</h6>
-                        <span>CEO</span>
+                        <h6>{{ auth()->user()->role }}</h6>
+                        <span>{{ auth()->user()->email }}</span>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a class="dropdown-item d-flex align-items-center" href="{{ url('/profile') }}">
                             <i class="bi bi-person"></i> <span>My Profile</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">
-                            <i class="bi bi-box-arrow-right"></i> <span>Sign Out</span>
-                        </a>
+                        <form method="POST" action="{{ route('super-admin.logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item d-flex align-items-center">
+                                <i class="bi bi-box-arrow-right"></i> <span>Sign Out</span>
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </li>

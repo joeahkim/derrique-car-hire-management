@@ -20,40 +20,46 @@
             <div class="card mb-4 rounded-4">
                 <div class="card-body px-4 pt-4 pb-2">
 
-                    <form class="form-label" method="post" action="add_transaction1.php">
+                    <form class="form-label" method="post" action="{{ route('super-admin.cars.store') }}" enctype="multipart/form-data">
+                        @csrf
                         <div class="row mb-3">
-                            <label class="col-form-label col-sm-2">Car Name</label>
+                            <label class="col-form-label col-sm-2">Car Make</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="name">
+                                <input type="text" class="form-control" name="make" required>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <label class="col-form-label col-sm-2">Model</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description">
+                                <input type="text" class="form-control" name="model" required>
                             </div>
                         </div>
+
                         <div class="row mb-3">
                             <label class="col-form-label col-sm-2">Price</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description">
+                                <input type="number" class="form-control" name="price" required>
                             </div>
                         </div>
+
                         <div class="row mb-3">
                             <label class="col-form-label col-sm-2">Number Plates</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description">
+                                <input type="text" class="form-control" name="number_plate" required>
                             </div>
                         </div>
+
                         <div class="row mb-3">
-                            <label class="col-form-label col-sm-2">Image</label>
+                            <label class="col-sm-2 col-form-label">Car Image</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description">
+                                <input type="file" class="form-control" name="image" accept="image/*">
                             </div>
                         </div>
+
                         <button type="submit" class="btn btn-primary">SUBMIT</button>
                     </form>
+
                 </div>
             </div>
         </div>

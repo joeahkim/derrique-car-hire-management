@@ -15,31 +15,33 @@ class CarController extends Controller
         return view('auth.super-admin.addcar');
     }
 
-    // Store the car in the database
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
+        // Validate the input
+        $validated = $request->validate([
+            'make' => 'required|string|max:255',
             'model' => 'required|string|max:255',
             'price' => 'required|numeric',
-            // 'availability' => 'required|in:available,unavailable',
-            'plate' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'number_plate' => 'required|string|max:255',
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        // Handle the file upload
-        $imagePath = $request->file('image')->store('car-images', 'public');
+        // Handle image upload if provided
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('cars', 'public');
+        }
 
-        // Create the car
+        // Save data to the database
         Car::create([
-            'name' => $request->name,
-            'model' => $request->model,
-            'price' => $request->price,
-            // 'availability' => $request->availability,
-            'plate' => $request->plate,
+            'make' => $validated['make'],
+            'model' => $validated['model'],
+            'price' => $validated['price'],
+            'number_plate' => $validated['number_plate'],
             'image' => $imagePath,
         ]);
 
+        // Redirect back with success message
         return redirect()->route('super-admin.cars.create')->with('success', 'Car added successfully!');
     }
 }

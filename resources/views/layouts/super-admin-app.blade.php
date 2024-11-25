@@ -34,6 +34,34 @@
     @include('super-admin-partials.footer')
 
     <!-- Vendor JS Files -->
+    <script>
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const filter = this.getAttribute('data-filter'); // Get the selected filter
+                fetchSalesData(filter); // Fetch sales data based on the filter
+            });
+        });
+
+        function fetchSalesData(filter) {
+            fetch(`/sales-data?filter=${filter}`) // Adjust the route to match your backend logic
+                .then(response => response.json())
+                .then(data => {
+                    // Update the Sales Card with the fetched data
+                    document.querySelector('.card-title span').textContent = `| ${capitalize(filter)}`;
+                    document.querySelector('.ps-3 h6').textContent = data.amount_paid;
+                })
+                .catch(error => console.error('Error fetching sales data:', error));
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1).replace('_', ' ');
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchSalesData('today'); // Load today's sales by default
+        });
+    </script>
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
     @stack('scripts')

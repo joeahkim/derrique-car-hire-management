@@ -8,6 +8,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SuperAdmin\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SalesController;
 
 
 Route::get('/', function () {
@@ -82,6 +83,7 @@ Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->name('su
     Route::post('/admins', [AdminController::class, 'store'])->name('admins.store'); // Handle form submission
 });
 
+Route::get('/sales-data', [SalesController::class, 'getSalesData']);
 
 
 require __DIR__ . '/auth.php';

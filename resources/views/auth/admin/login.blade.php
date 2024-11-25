@@ -51,7 +51,7 @@
 			</form>
 
 		</div>
-		<div class="overlay-container">
+		<!-- <div class="overlay-container">
 			<div class="overlay">
 				<div class="overlay-panel overlay-left">
 					<h1>Welcome Back!</h1>
@@ -64,7 +64,7 @@
 					<button class="ghost" id="signUp">Sign Up</button>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 	<footer>

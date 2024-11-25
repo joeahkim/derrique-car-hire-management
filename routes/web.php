@@ -6,7 +6,7 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SuperAdmin\CarController;
-
+use App\Http\Controllers\BookingController;
 
 
 Route::get('/', function () {
@@ -39,9 +39,17 @@ Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
 Route::get('/admin/login', [AuthenticatedSessionController::class, 'create'])->name('admin.login');
 Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login.submit');
 Route::post('/admin/logout', [AuthenticatedSessionController::class, 'destroy'])->name('admin.logout');
-Route::middleware('auth')->get('/admin/dashboard', function () {
-    return view('auth.admin.dashboard');  // Replace with your actual dashboard view
-})->name('admin.dashboard');
+// Route::middleware('auth')->get('/admin/dashboard', function () {
+//     return view('auth.admin.dashboard');
+// })->name('admin.dashboard');
+Route::middleware('auth')->get('/admin/dashboard', [BookingController::class, 'create'])->name('admin.dashboard');
+// Add this route
+Route::middleware('auth')->post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+Route::middleware('auth')->patch('/bookings/{booking}/return', [BookingController::class, 'markReturned'])->name('bookings.markReturned');
+
+Route::middleware('auth')->get('/bookings/pending-returns', [BookingController::class, 'pendingReturns'])->name('bookings.pendingReturns');
+Route::middleware('auth')->patch('/bookings/{booking}/mark-returned', [BookingController::class, 'markReturnedWithCheckbox'])->name('bookings.markReturnedWithCheckbox');
+
 
 Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 

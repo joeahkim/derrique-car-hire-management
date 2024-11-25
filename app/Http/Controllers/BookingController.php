@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+use App\Models\Client;
+use App\Models\Car;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 
@@ -20,7 +23,12 @@ class BookingController extends Controller
      */
     public function create()
     {
-        //
+        // Fetch all clients and vehicles for the booking form
+        $clients = Client::all();
+        $cars = Car::all();
+
+        // Return the view with the data
+        return view('auth.admin.dashboard', compact('clients', 'cars'));
     }
 
     /**
@@ -28,8 +36,54 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'client_id' => 'required|exists:clients,id',
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'pickup_date' => 'required|date|after:today',
+            'return_date' => 'required|date|after:pickup_date',
+            'amount_paid' => 'required|numeric|min:0',
+        ]);
+
+        Booking::create([
+            'client_id' => $validated['client_id'],
+            'car_id' => $validated['car_id'],
+            'pickup_date' => $validated['pickup_date'],
+            'return_date' => $validated['return_date'],
+            'amount_paid' => $validated['amount_paid'],
+            'admin_id' => Auth::id(), // Record the admin who made the booking
+        ]);
+
+        return redirect()->route('admin.dashboard')->with('success', 'Booking created successfully.');
     }
+
+    public function markReturned(Request $request, Booking $booking)
+    {
+        $validated = $request->validate([
+            'actual_return_date' => 'required|date|after_or_equal:' . $booking->pickup_date,
+        ]);
+
+        $booking->update([
+            'actual_return_date' => $validated['actual_return_date'],
+        ]);
+
+        return redirect()->back()->with('success', 'Car marked as returned successfully.');
+    }
+    public function pendingReturns()
+    {
+        $bookings = Booking::whereNull('actual_return_date')->get();
+
+        return view('bookings.pending-returns', compact('bookings'));
+    }
+    public function markReturnedWithCheckbox(Request $request, Booking $booking)
+    {
+        $booking->update([
+            'actual_return_date' => now(),
+        ]);
+
+        return redirect()->route('bookings.pendingReturns')->with('success', 'Booking marked as returned successfully.');
+    }
+
+
 
     /**
      * Display the specified resource.
@@ -50,10 +104,7 @@ class BookingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Booking $booking)
-    {
-        //
-    }
+    public function update(Request $request, Booking $booking) {}
 
     /**
      * Remove the specified resource from storage.

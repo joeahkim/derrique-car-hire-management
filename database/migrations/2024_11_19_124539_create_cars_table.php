@@ -14,7 +14,7 @@ class CreateCarsTable extends Migration
             $table->string('model');
             $table->decimal('price', 10, 2);
             // $table->enum('availability', ['available', 'unavailable']);
-            $table->string('number_plate');
+            $table->string('number_plate')->unique();
             $table->string('image'); // Store the image path
             $table->timestamps();
         });

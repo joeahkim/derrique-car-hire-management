@@ -34,6 +34,15 @@
     @include('partials.footer')
 
     <!-- Vendor JS Files -->
+    <script>
+        document.querySelectorAll('input[name="mark_returned"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.form.submit();
+                }
+            });
+        });
+    </script>
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
     @stack('scripts')

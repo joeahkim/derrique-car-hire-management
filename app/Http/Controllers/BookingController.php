@@ -38,9 +38,9 @@ class BookingController extends Controller
     {
         $validated = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'pickup_date' => 'required|date|after:today',
-            'return_date' => 'required|date|after:pickup_date',
+            'car_id' => 'required|exists:cars,id',
+            'pickup_date' => 'required|date|after_or_equal:today',
+            'return_date' => 'required|date|after_or_equal:pickup_date',
             'amount_paid' => 'required|numeric|min:0',
         ]);
 
@@ -92,6 +92,26 @@ class BookingController extends Controller
     {
         //
     }
+    public function getBookings(Request $request)
+    {
+        $filter = $request->query('filter', 'today');
+        $query = Booking::query();
+
+        // Filter bookings
+        if ($filter === 'today') {
+            $query->whereDate('pickup_date', now()->toDateString());
+        } elseif ($filter === 'this_month') {
+            $query->whereMonth('pickup_date', now()->month)
+                ->whereYear('pickup_date', now()->year);
+        } elseif ($filter === 'this_year') {
+            $query->whereYear('pickup_date', now()->year);
+        }
+
+        $bookings = $query->get(['client_name', 'phone_number', 'car_name', 'number_plates', 'amount_paid', 'pickup_date', 'authorized_by']);
+
+        return response()->json(['bookings' => $bookings]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.

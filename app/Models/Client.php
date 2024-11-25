@@ -13,16 +13,22 @@ class Client extends Model
         'name',
         'phone_number',
         'id_number',
-        'id_passport_photo',
         'nationality',
-        'occupation',
         'residence',
+        'occupation',
         'drivers_license_number',
-        'drivers_license_expiry_date'
+        'drivers_license_expiry_date',
+        'id_card_front',
+        'id_card_back'
     ];
 
     public function guarantor()
     {
         return $this->hasOne(Guarantor::class);
+    }
+
+    public function nextOfKin()
+    {
+        return $this->hasOne(NextOfKin::class);
     }
 }

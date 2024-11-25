@@ -61,6 +61,65 @@
         document.addEventListener('DOMContentLoaded', function() {
             fetchSalesData('today'); // Load today's sales by default
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize bookings filter
+            initBookingsFilter('/bookings-data');
+        });
+
+        function initBookingsFilter(endpoint) {
+            // Preload today's bookings
+            fetchBookings(endpoint, 'today');
+
+            // Add event listener for filter options
+            document.querySelectorAll('#bookings-filter .dropdown-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const filter = this.getAttribute('data-filter');
+                    fetchBookings(endpoint, filter);
+                });
+            });
+        }
+
+        function fetchBookings(endpoint, filter) {
+            fetch(`${endpoint}?filter=${filter}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update filter title
+                    document.getElementById('bookings-filter-title').textContent = `| ${capitalize(filter)}`;
+
+                    // Update table body
+                    const tbody = document.getElementById('recent-bookings');
+                    tbody.innerHTML = ''; // Clear existing content
+
+                    if (data.bookings.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="7" class="text-center">No bookings found.</td></tr>`;
+                        return;
+                    }
+
+                    // Populate table rows with fetched data
+                    data.bookings.forEach(booking => {
+                        const row = `
+                    <tr>
+                        <td>${booking.client_name}</td>
+                        <td>${booking.phone_number}</td>
+                        <td>${booking.car_name}</td>
+                        <td>${booking.number_plates}</td>
+                        <td>${booking.amount_paid}</td>
+                        <td>${booking.pickup_date}</td>
+                        <td>${booking.authorized_by}</td>
+                    </tr>
+                `;
+                        tbody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error('Error fetching bookings:', error));
+        }
+
+        // Helper function to capitalize filter names
+        function capitalize(str) {
+            return str.replace('_', ' ').replace(/\b\w/g, char => char.toUpperCase());
+        }
     </script>
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>

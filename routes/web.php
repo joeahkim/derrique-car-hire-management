@@ -51,9 +51,14 @@ Route::middleware('auth')->patch('/bookings/{booking}/return', [BookingControlle
 
 Route::middleware('auth')->get('/bookings/pending-returns', [BookingController::class, 'pendingReturns'])->name('bookings.pendingReturns');
 Route::middleware('auth')->patch('/bookings/{booking}/mark-returned', [BookingController::class, 'markReturnedWithCheckbox'])->name('bookings.markReturnedWithCheckbox');
+Route::middleware('auth')->get('/clients/create', [ClientController::class, 'create'])->name('clients.create');
+Route::middleware('auth')->post('/clients', [ClientController::class, 'store'])->name('clients.store');
 
 
 Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+Route::middleware('auth')->get('/clients/create', [ClientController::class, 'create'])->name('clients.create');
+Route::middleware('auth')->post('/clients', [ClientController::class, 'store'])->name('clients.store');
+
 
 // Route::get('/super-admin/login', [SuperAdminController::class, 'showLoginForm'])->name('super-admin.login-form');
 // Route::post('/super-admin/login', [SuperAdminController::class, 'login'])->name('super-admin.login');
@@ -84,6 +89,9 @@ Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->name('su
 });
 
 Route::get('/sales-data', [SalesController::class, 'getSalesData']);
+Route::get('/client-data', [ClientController::class, 'getFilteredClients'])->name('client.data');
+Route::get('/bookings-data', [BookingController::class, 'getBookings']);
+
 
 
 require __DIR__ . '/auth.php';

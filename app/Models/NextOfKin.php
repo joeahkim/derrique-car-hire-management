@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Guarantor extends Model
+class NextOfKin extends Model
 {
     use HasFactory;
 
@@ -13,13 +13,7 @@ class Guarantor extends Model
         'client_id',
         'name',
         'phone_number',
-        'id_number',
-        'nationality',
-        'residence',
-        'relationship',
-        'occupation',
-        'id_card_front',
-        'id_card_back',
+        'id_passport_number',
     ];
 
     public function client()

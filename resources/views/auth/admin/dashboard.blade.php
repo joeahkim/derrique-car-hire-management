@@ -6,6 +6,16 @@
 <div class="pagetitle">
     <h1>Create Booking</h1>
 </div>
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 
 <div class="container-fluid py-4">
     <div class="card mb-4 rounded-4">

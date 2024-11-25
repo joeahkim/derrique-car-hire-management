@@ -7,6 +7,7 @@ use App\Http\Controllers\auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SuperAdmin\CarController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\AdminController;
 
 
 Route::get('/', function () {
@@ -75,6 +76,12 @@ Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->name('su
     // Route to handle form submission
     Route::post('/cars', [CarController::class, 'store'])->name('cars.store');
 });
+
+Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
+    Route::get('/admins/create', [AdminController::class, 'create'])->name('admins.create'); // Show the form
+    Route::post('/admins', [AdminController::class, 'store'])->name('admins.store'); // Handle form submission
+});
+
 
 
 require __DIR__ . '/auth.php';

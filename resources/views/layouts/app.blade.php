@@ -34,6 +34,44 @@
     @include('partials.footer')
 
     <!-- Vendor JS Files -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const canvas = document.getElementById("signature-pad");
+            const signaturePad = new SignaturePad(canvas);
+            const hiddenInput = document.getElementById("client-signature");
+
+            // Resize canvas to fit container
+            function resizeCanvas() {
+                const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext("2d").scale(ratio, ratio);
+                signaturePad.clear(); // Clear the canvas after resizing
+            }
+            resizeCanvas();
+            window.addEventListener("resize", resizeCanvas);
+
+            // Clear the signature pad
+            document.getElementById("clear-signature").addEventListener("click", function() {
+                signaturePad.clear();
+                hiddenInput.value = ""; // Reset the hidden input when cleared
+            });
+
+            // On form submission, populate the hidden input with the signature data
+            const form = document.querySelector("form");
+            form.addEventListener("submit", function(event) {
+                if (!signaturePad.isEmpty()) {
+                    hiddenInput.value = signaturePad.toDataURL("image/png"); // Base64 string for the signature
+                    console.log("Client Signature Base64:", hiddenInput.value); // Debug: Log the Base64 string
+                } else {
+                    event.preventDefault();
+                    alert("Please provide a signature before submitting the form.");
+                }
+            });
+        });
+    </script>
+
     <script>
         document.querySelectorAll('input[name="mark_returned"]').forEach(checkbox => {
             checkbox.addEventListener('change', function() {

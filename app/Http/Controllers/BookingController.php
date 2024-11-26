@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Client;
 use App\Models\Car;
@@ -42,19 +44,45 @@ class BookingController extends Controller
             'pickup_date' => 'required|date|after_or_equal:today',
             'return_date' => 'required|date|after_or_equal:pickup_date',
             'amount_paid' => 'required|numeric|min:0',
+            'client_signature' => 'required', // Ensure signature is received
         ]);
+        Log::info('Client Signature Data:', ['client_signature' => $request->input('client_signature')]);
 
-        Booking::create([
-            'client_id' => $validated['client_id'],
-            'car_id' => $validated['car_id'],
-            'pickup_date' => $validated['pickup_date'],
-            'return_date' => $validated['return_date'],
-            'amount_paid' => $validated['amount_paid'],
-            'admin_id' => Auth::id(), // Record the admin who made the booking
-        ]);
+        try {
+            // Decode the Base64 signature
+            $signatureData = $request->input('client_signature');
+            $signatureImage = str_replace('data:image/png;base64,', '', $signatureData);
+            $signatureImage = str_replace(' ', '+', $signatureImage);
+            $decodedImage = base64_decode($signatureImage);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Booking created successfully.');
+            if ($decodedImage === false) {
+                return redirect()->back()->withErrors(['client_signature' => 'Invalid signature data.']);
+            }
+
+            // Create a unique file name
+            $signatureFileName = uniqid() . '.png';
+            $signatureFilePath = 'signatures/' . $signatureFileName;
+
+            // Store the signature as an image file
+            Storage::disk('public')->put($signatureFilePath, $decodedImage);
+
+            // Save the booking record
+            Booking::create([
+                'client_id' => $validated['client_id'],
+                'car_id' => $validated['car_id'],
+                'pickup_date' => $validated['pickup_date'],
+                'return_date' => $validated['return_date'],
+                'amount_paid' => $validated['amount_paid'],
+                'admin_id' => Auth::id(),
+                'client_signature_path' => $signatureFilePath,
+            ]);
+
+            return redirect()->route('admin.dashboard')->with('success', 'Booking created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'An error occurred while saving the signature: ' . $e->getMessage()]);
+        }
     }
+
 
     public function markReturned(Request $request, Booking $booking)
     {

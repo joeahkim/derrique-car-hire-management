@@ -18,8 +18,9 @@ return new class extends Migration
             $table->foreignId('admin_id')->constrained('users')->onDelete('cascade'); // Reference to the admin
             $table->date('pickup_date');
             $table->date('return_date');
-            $table->date('actual_return_date')->nullable(); // Nullable until the car is returned
-            $table->decimal('amount_paid', 10, 2); // Amount paid during booking
+            $table->date('actual_return_date')->nullable();
+            $table->decimal('amount_paid', 10, 2);
+            $table->string('client_signature_path')->nullable(); // Path to the signature image
             $table->timestamps();
         });
     }

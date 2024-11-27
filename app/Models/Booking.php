@@ -17,7 +17,7 @@ class Booking extends Model
         'return_date',
         'actual_return_date',
         'amount_paid',
-        'client_signature',
+        'client_signature_path',
     ];
 
     public function client()

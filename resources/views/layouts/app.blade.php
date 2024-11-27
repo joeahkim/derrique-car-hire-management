@@ -35,11 +35,15 @@
 
     <!-- Vendor JS Files -->
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const canvas = document.getElementById("signature-pad");
             const signaturePad = new SignaturePad(canvas);
             const hiddenInput = document.getElementById("client-signature");
+            const saveButton = document.getElementById("save-signature");
+            const clearButton = document.getElementById("clear-signature");
+            const signatureStatus = document.getElementById("signature-status");
 
             // Resize canvas to fit container
             function resizeCanvas() {
@@ -47,30 +51,41 @@
                 canvas.width = canvas.offsetWidth * ratio;
                 canvas.height = canvas.offsetHeight * ratio;
                 canvas.getContext("2d").scale(ratio, ratio);
-                signaturePad.clear(); // Clear the canvas after resizing
+                signaturePad.clear();
             }
             resizeCanvas();
             window.addEventListener("resize", resizeCanvas);
 
             // Clear the signature pad
-            document.getElementById("clear-signature").addEventListener("click", function() {
+            clearButton.addEventListener("click", function(e) {
+                e.preventDefault();
                 signaturePad.clear();
-                hiddenInput.value = ""; // Reset the hidden input when cleared
+                hiddenInput.value = ""; // Reset the hidden input value
+                signatureStatus.style.display = "none";
             });
 
-            // On form submission, populate the hidden input with the signature data
+            // Save the signature to the hidden input field
+            saveButton.addEventListener("click", function(e) {
+                e.preventDefault();
+                if (!signaturePad.isEmpty()) {
+                    hiddenInput.value = signaturePad.toDataURL("image/png");
+                    signatureStatus.style.display = "block";
+                } else {
+                    alert("Please draw a signature before saving.");
+                }
+            });
+
+            // Validate before form submission
             const form = document.querySelector("form");
             form.addEventListener("submit", function(event) {
-                if (!signaturePad.isEmpty()) {
-                    hiddenInput.value = signaturePad.toDataURL("image/png"); // Base64 string for the signature
-                    console.log("Client Signature Base64:", hiddenInput.value); // Debug: Log the Base64 string
-                } else {
+                if (hiddenInput.value === "") {
                     event.preventDefault();
-                    alert("Please provide a signature before submitting the form.");
+                    alert("Please save the signature before submitting.");
                 }
             });
         });
     </script>
+
 
     <script>
         document.querySelectorAll('input[name="mark_returned"]').forEach(checkbox => {

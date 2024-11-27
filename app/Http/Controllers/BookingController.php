@@ -44,12 +44,12 @@ class BookingController extends Controller
             'pickup_date' => 'required|date|after_or_equal:today',
             'return_date' => 'required|date|after_or_equal:pickup_date',
             'amount_paid' => 'required|numeric|min:0',
-            'client_signature' => 'required', // Ensure signature is received
+            'client_signature' => 'required|string',
         ]);
-        Log::info('Client Signature Data:', ['client_signature' => $request->input('client_signature')]);
+
+        // Log::info('Client Signature Data:', ['client_signature' => $request->input('client_signature')]);
 
         try {
-            // Decode the Base64 signature
             $signatureData = $request->input('client_signature');
             $signatureImage = str_replace('data:image/png;base64,', '', $signatureData);
             $signatureImage = str_replace(' ', '+', $signatureImage);
@@ -59,14 +59,11 @@ class BookingController extends Controller
                 return redirect()->back()->withErrors(['client_signature' => 'Invalid signature data.']);
             }
 
-            // Create a unique file name
             $signatureFileName = uniqid() . '.png';
             $signatureFilePath = 'signatures/' . $signatureFileName;
 
-            // Store the signature as an image file
             Storage::disk('public')->put($signatureFilePath, $decodedImage);
 
-            // Save the booking record
             Booking::create([
                 'client_id' => $validated['client_id'],
                 'car_id' => $validated['car_id'],
@@ -82,6 +79,7 @@ class BookingController extends Controller
             return redirect()->back()->withErrors(['error' => 'An error occurred while saving the signature: ' . $e->getMessage()]);
         }
     }
+
 
 
     public function markReturned(Request $request, Booking $booking)

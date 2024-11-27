@@ -86,15 +86,16 @@
                         <input type="date" class="form-control" name="return_date" required>
                     </div>
                 </div>
+
+                <!-- Client Signature -->
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Client Signature</label>
                     <div class="col-sm-10">
                         <input type="hidden" name="client_signature" id="client-signature">
-                        <canvas id="signature-pad"
-                            style="border: 1px solid #000; display: block; touch-action: none;"
-                            width="800" height="200">
-                        </canvas>
+                        <canvas id="signature-pad" style="border: 1px solid #000; width: 100%; height: 200px;"></canvas>
                         <button type="button" id="clear-signature" class="btn btn-secondary mt-2">Clear Signature</button>
+                        <button type="button" id="save-signature" class="btn btn-success mt-2">Save Signature</button>
+                        <div id="signature-status" class="mt-2 text-success" style="display: none;">Signature Saved!</div>
                     </div>
                 </div>
 

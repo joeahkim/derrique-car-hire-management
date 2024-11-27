@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -108,8 +109,6 @@ class BookingController extends Controller
 
         return redirect()->route('bookings.pendingReturns')->with('success', 'Booking marked as returned successfully.');
     }
-
-
 
     /**
      * Display the specified resource.

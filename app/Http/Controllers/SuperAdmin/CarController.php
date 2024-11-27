@@ -4,8 +4,11 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Car; // Your Car model
-use Illuminate\Support\Facades\Storage;
+use App\Models\Car;
+use App\Models\Booking;
+
+
+
 
 class CarController extends Controller
 {
@@ -58,5 +61,34 @@ class CarController extends Controller
             ->get();
 
         return view('cars.available', compact('availableCars'));
+    }
+
+    public function index()
+    {
+        // Fetch cars that are either not booked or have been returned
+        $cars = Car::leftJoin('bookings', 'cars.id', '=', 'bookings.car_id')
+            ->where(function ($query) {
+                $query->whereNull('bookings.id') // Cars never booked
+                    ->orWhereNotNull('bookings.actual_return_date'); // Cars that have been returned
+            })
+            ->select('cars.*')
+            ->distinct()
+            ->get();
+
+        return view('auth.super-admin.cars.index', compact('cars'));
+    }
+    public function forAllCars()
+    {
+        $cars = Car::all();
+
+        return view('auth.super-admin.cars.all-cars', compact('cars'));
+    }
+    public function pendingReturns()
+    {
+        $bookings = Booking::with(['client', 'car', 'admin']) // Eager load related models to prevent N+1 query issue
+            ->whereNull('actual_return_date') // Only bookings that have not been returned
+            ->get();
+
+        return view('auth.super-admin.cars.pending-returns', compact('bookings'));
     }
 }

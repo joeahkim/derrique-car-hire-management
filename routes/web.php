@@ -74,6 +74,7 @@ Route::middleware('auth')->get('/super-admin/dashboard', function () {
     return view('auth.super-admin.dashboard');  // Replace with your actual dashboard view
 })->name('super-admin.dashboard');
 
+
 // Car management for super admin
 Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
     // Route to show the form for creating a car
@@ -81,6 +82,13 @@ Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->name('su
 
     // Route to handle form submission
     Route::post('/cars', [CarController::class, 'store'])->name('cars.store');
+    Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
+    Route::get('/cars', [CarController::class, 'forAllCars'])->name('cars.all-cars');
+    // Route to show pending returns
+    Route::get('/cars/pending-returns', [CarController::class, 'pendingReturns'])->name('cars.pending-returns');
+
+    // Route to mark the car as returned
+    Route::patch('/bookings/{booking}/mark-returned', [BookingController::class, 'markReturned'])->name('bookings.markReturnedWithCheckbox');
 });
 
 Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
@@ -93,6 +101,7 @@ Route::get('/client-data', [ClientController::class, 'getFilteredClients'])->nam
 Route::get('/bookings-data', [BookingController::class, 'getBookings']);
 
 Route::get('/available-cars', [CarController::class, 'available'])->name('cars.available');
+
 
 
 

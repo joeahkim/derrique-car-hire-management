@@ -15,6 +15,12 @@
                 <i class="bi bi-card-list"></i> <span>Add a Client</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('cars.available') }}">
+                <i class="bi bi-car-front"></i> <span>Available Cars</span>
+            </a>
+        </li>
+
 
         </li>
     </ul>

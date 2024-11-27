@@ -44,4 +44,19 @@ class CarController extends Controller
         // Redirect back with success message
         return redirect()->route('super-admin.cars.create')->with('success', 'Car added successfully!');
     }
+
+    public function available()
+    {
+        // Fetch cars that are either not booked or have been returned
+        $availableCars = Car::leftJoin('bookings', 'cars.id', '=', 'bookings.car_id')
+            ->where(function ($query) {
+                $query->whereNull('bookings.id') // Cars never booked
+                    ->orWhereNotNull('bookings.actual_return_date'); // Cars that have been returned
+            })
+            ->select('cars.*')
+            ->distinct()
+            ->get();
+
+        return view('cars.available', compact('availableCars'));
+    }
 }

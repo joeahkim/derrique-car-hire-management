@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone_number');
+            $table->string('email');
             $table->string('id_number')->unique();
             // $table->string('id_passport_photo')->nullable();
             $table->string('nationality');

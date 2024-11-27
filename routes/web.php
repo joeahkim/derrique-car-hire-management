@@ -92,6 +92,8 @@ Route::get('/sales-data', [SalesController::class, 'getSalesData']);
 Route::get('/client-data', [ClientController::class, 'getFilteredClients'])->name('client.data');
 Route::get('/bookings-data', [BookingController::class, 'getBookings']);
 
+Route::get('/available-cars', [CarController::class, 'available'])->name('cars.available');
+
 
 
 require __DIR__ . '/auth.php';

@@ -19,6 +19,7 @@ class ClientController extends Controller
             // Client validation
             'client_name' => 'required|string|max:255',
             'client_phone' => 'required|string|max:15',
+            'client_email' => 'required|string|max:255',
             'client_id_number' => 'required|string|unique:clients,id_number',
             'client_nationality' => 'required|string|max:255',
             'client_occupation' => 'required|string|max:255',
@@ -54,6 +55,7 @@ class ClientController extends Controller
         $client = Client::create([
             'name' => $validated['client_name'],
             'phone_number' => $validated['client_phone'],
+            'email' => $validated['client_email'],
             'id_number' => $validated['client_id_number'],
             'nationality' => $validated['client_nationality'],
             'occupation' => $validated['client_occupation'],

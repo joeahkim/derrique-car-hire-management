@@ -14,6 +14,13 @@ use App\Http\Controllers\SalesController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/homes', function () {
+    return view('pages.homes');
+})->name('homes');
+
+Route::get('/cars', function () {
+    return view('pages.cars');
+})->name('cars');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

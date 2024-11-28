@@ -9,18 +9,14 @@ use App\Http\Controllers\SuperAdmin\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\PageController;
 
 
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/homes', function () {
-    return view('pages.homes');
-})->name('homes');
-
-Route::get('/cars', function () {
-    return view('pages.cars');
-})->name('cars');
+Route::get('/homes', [PageController::class, 'homes'])->name('homes');
+Route::get('/cars', [PageController::class, 'cars'])->name('cars');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
